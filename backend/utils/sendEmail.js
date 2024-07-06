@@ -10,8 +10,8 @@ const sendEmail = async (options) => {
       pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
-      ciphers: 'SSLv3'
-    }
+      ciphers: 'SSLv3',
+    },
   });
 
   const mailOptions = {

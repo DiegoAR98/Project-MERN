@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const projectSchema = new mongoose.Schema(
+const projectSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +21,14 @@ const projectSchema = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
+      required: true,
     },
+    attachments: [
+      {
+        fileName: { type: String },
+        fileId: { type: mongoose.Schema.Types.ObjectId },
+      },
+    ],
   },
   {
     timestamps: true,
