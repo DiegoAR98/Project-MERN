@@ -1,5 +1,15 @@
 const asyncHandler = require('express-async-handler');
+const mongoose = require('mongoose');
 const Project = require('../models/Project');
+const Grid = require('gridfs-stream');
+
+const conn = mongoose.connection;
+let gfs;
+
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 
 // @desc    Get all projects for a user
 // @route   GET /api/projects
@@ -85,27 +95,19 @@ const uploadAttachment = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
 
   if (project && project.user.toString() === req.user._id.toString()) {
-    if (!req.files || Object.keys(req.files).length === 0) {
+    if (!req.file) {
       res.status(400);
-      throw new Error('No files were uploaded.');
+      throw new Error('No file uploaded');
     }
 
-    const file = req.files.file;
-    const fileName = file.name;
-    const filePath = `/uploads/${fileName}`;
+    const file = req.file;
+    const fileName = file.filename;
+    const fileId = file.id;
 
-    file.mv(`${__dirname}/../uploads/${fileName}`, (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500);
-        throw new Error('File upload failed');
-      }
+    project.attachments.push({ fileName, fileId });
+    await project.save();
 
-      project.attachments.push({ fileName, filePath });
-      project.save();
-
-      res.json({ message: 'File uploaded', fileName, filePath });
-    });
+    res.json({ message: 'File uploaded', fileName, fileId });
   } else {
     res.status(404);
     throw new Error('Project not found');
