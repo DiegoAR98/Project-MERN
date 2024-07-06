@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const userInfo = localStorage.getItem('userInfo');
 
   const handleLogout = () => {
     // Clear user info from local storage
@@ -14,21 +15,26 @@ const Navbar = () => {
   return (
     <nav>
       <ul>
-        <li>
-          <Link to="/">Login</Link>
-        </li>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
-        <li>
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
-        <li>
-          <Link to="/create-project">Create Project</Link>
-        </li>
-        <li>
-          <button onClick={handleLogout}>Logout</button>
-        </li>
+        {!userInfo && (
+          <>
+            <li>
+              <Link to="/">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+          </>
+        )}
+        {userInfo && (
+          <>
+            <li>
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
