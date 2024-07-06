@@ -1,15 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const mongoose = require('mongoose');
 const Project = require('../models/Project');
-const Grid = require('gridfs-stream');
-
-const conn = mongoose.connection;
-let gfs;
-
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
 
 // @desc    Get all projects for a user
 // @route   GET /api/projects
@@ -88,37 +78,10 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Upload an attachment to a project
-// @route   POST /api/projects/:id/attachments
-// @access  Private
-const uploadAttachment = asyncHandler(async (req, res) => {
-  const project = await Project.findById(req.params.id);
-
-  if (project && project.user.toString() === req.user._id.toString()) {
-    if (!req.file) {
-      res.status(400);
-      throw new Error('No file uploaded');
-    }
-
-    const file = req.file;
-    const fileName = file.filename;
-    const fileId = file.id;
-
-    project.attachments.push({ fileName, fileId });
-    await project.save();
-
-    res.json({ message: 'File uploaded', fileName, fileId });
-  } else {
-    res.status(404);
-    throw new Error('Project not found');
-  }
-});
-
 module.exports = {
   getProjects,
   getProjectById,
   createProject,
   updateProject,
   deleteProject,
-  uploadAttachment,
 };
