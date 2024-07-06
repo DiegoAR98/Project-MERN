@@ -17,13 +17,28 @@ const Dashboard = () => {
   return (
     <div className="container">
       <h1>Dashboard</h1>
-      <ul>
-        {projects.map((project) => (
-          <li key={project._id}>
-            <Link to={`/project/${project._id}`}>{project.name}</Link>
-          </li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Project Category</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {projects.map((project) => (
+            <tr key={project._id}>
+              <td>{project.name}</td>
+              <td>{project.category}</td>
+              <td>{new Date(project.dueDate).toLocaleDateString()}</td>
+              <td>
+                <Link to={`/project/${project._id}`}>View / Edit</Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
