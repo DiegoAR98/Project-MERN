@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -11,18 +12,26 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('http://localhost:5000/api/users/login', { email, password });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/dashboard');
+      await axios.post('http://localhost:5000/api/users/register', { name, email, password });
+      setMessage('Registration successful! Please check your email to verify your account.');
+      navigate('/login');
     } catch (error) {
-      setMessage('Invalid email or password');
+      setMessage('Registration failed. Please try again.');
     }
   };
 
   return (
     <div className="container">
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
         <div>
           <label>Email:</label>
           <input
@@ -39,14 +48,11 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
       {message && <p>{message}</p>}
-      <p>
-        <Link to="/reset-password">Forgot Password?</Link>
-      </p>
     </div>
   );
 };
 
-export default Login;
+export default Register;

@@ -9,14 +9,16 @@ const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 const User = require('./models/User');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Ensure CORS is imported
+const cors = require('cors');
 
 dotenv.config();
 connectDB();
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Use CORS middleware
+app.use(cors({
+  origin: 'http://localhost:3000', // Ensure your frontend URL is allowed
+}));
 
 const getUser = async (token) => {
   if (token) {

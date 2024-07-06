@@ -5,18 +5,32 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+    // Clear user info from local storage
+    localStorage.removeItem('userInfo');
+    // Redirect to login page
+    navigate('/login');
   };
 
   return (
-    <div className="navbar">
-      <Link to="/dashboard">Dashboard</Link>
-      <Link to="/create-project">Create Project</Link>
-      <button onClick={handleLogout} style={{ marginLeft: 'auto', background: 'none', color: 'white', border: 'none', cursor: 'pointer' }}>
-        Logout
-      </button>
-    </div>
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Login</Link>
+        </li>
+        <li>
+          <Link to="/register">Register</Link>
+        </li>
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+        <li>
+          <Link to="/create-project">Create Project</Link>
+        </li>
+        <li>
+          <button onClick={handleLogout}>Logout</button>
+        </li>
+      </ul>
+    </nav>
   );
 };
 
