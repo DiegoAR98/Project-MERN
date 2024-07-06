@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import ResetPasswordForm from './pages/ResetPasswordForm';
 import VerifyEmail from './pages/VerifyEmail';
+import Task from './pages/Task';
 import Navbar from './components/Navbar';
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
         <Route path="/create-project" element={<PrivateRoute element={CreateProject} />} />
         <Route path="/project/:id" element={<PrivateRoute element={Project} />} />
+        <Route path="/project/:projectId/task/:taskId" element={<PrivateRoute element={Task} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-password/:token" element={<ResetPasswordForm />} />

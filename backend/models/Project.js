@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const taskSchema = mongoose.Schema({
+  name: { type: String, required: true },
+  dueDate: { type: Date, required: true },
+  isComplete: { type: Boolean, default: false },
+}, { _id: true });
+
 const projectSchema = mongoose.Schema(
   {
     user: {
@@ -21,14 +27,8 @@ const projectSchema = mongoose.Schema(
     },
     dueDate: {
       type: Date,
-      required: true,
     },
-    attachments: [
-      {
-        fileName: { type: String },
-        fileId: { type: mongoose.Schema.Types.ObjectId },
-      },
-    ],
+    tasks: [taskSchema],
   },
   {
     timestamps: true,
