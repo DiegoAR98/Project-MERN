@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProjectById, updateProject, getTasks, addTask, addComment, getComments, addAttachment, getAttachments } from '../api/api';
+import {
+  getProjectById,
+  updateProject,
+  getTasks,
+  addTask,
+  addComment,
+  getComments,
+  addAttachment,
+  getAttachments,
+  deleteTask,
+  deleteComment,
+  deleteAttachment
+} from '../api/api';
 
 const Project = () => {
   const { id } = useParams();
@@ -78,6 +90,17 @@ const Project = () => {
     }
   };
 
+  const handleDeleteTask = async (taskId) => {
+    const token = localStorage.getItem('token');
+    try {
+      await deleteTask(id, taskId, token);
+      const data = await getTasks(id, token);
+      setTasks(data);
+    } catch (error) {
+      console.error('Error deleting task', error);
+    }
+  };
+
   const handleAddComment = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -86,6 +109,17 @@ const Project = () => {
       setCommentText('');
     } catch (error) {
       console.error('Error adding comment', error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    const token = localStorage.getItem('token');
+    try {
+      await deleteComment(id, commentId, token);
+      const data = await getComments(id, token);
+      setComments(data);
+    } catch (error) {
+      console.error('Error deleting comment', error);
     }
   };
 
@@ -100,6 +134,17 @@ const Project = () => {
       setFile(null);
     } catch (error) {
       console.error('Error adding attachment', error);
+    }
+  };
+
+  const handleDeleteAttachment = async (attachmentId) => {
+    const token = localStorage.getItem('token');
+    try {
+      await deleteAttachment(id, attachmentId, token);
+      const data = await getAttachments(id, token);
+      setAttachments(data);
+    } catch (error) {
+      console.error('Error deleting attachment', error);
     }
   };
 
@@ -156,6 +201,7 @@ const Project = () => {
             <Link to={`/project/${id}/task/${task._id}`}>
               {task.name} - Due: {new Date(task.dueDate).toLocaleDateString()}
             </Link>
+            <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -182,6 +228,7 @@ const Project = () => {
           <div key={comment._id}>
             <p>{comment.text}</p>
             <small>{comment.user.name}</small>
+            <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
           </div>
         ))}
       </div>
@@ -200,6 +247,7 @@ const Project = () => {
               {attachment.filename}
             </a>
             <small>{attachment.user.name}</small>
+            <button onClick={() => handleDeleteAttachment(attachment._id)}>Delete</button>
           </div>
         ))}
       </div>

@@ -196,6 +196,47 @@ const getAttachments = asyncHandler(async (req, res) => {
   res.status(200).json(attachments);
 });
 
+// Delete a comment
+const deleteComment = asyncHandler(async (req, res) => {
+  const comment = await Comment.findById(req.params.commentId);
+
+  if (!comment) {
+    res.status(404);
+    throw new Error('Comment not found');
+  }
+
+  await comment.remove();
+  res.json({ message: 'Comment removed' });
+});
+
+// Delete an attachment
+const deleteAttachment = asyncHandler(async (req, res) => {
+  const attachment = await Attachment.findById(req.params.attachmentId);
+
+  if (!attachment) {
+    res.status(404);
+    throw new Error('Attachment not found');
+  }
+
+  // Remove the attachment from S3 bucket
+  const params = {
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: attachment.filename,
+  };
+
+  s3.deleteObject(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error deleting file from S3' });
+    } else {
+      console.log('File deleted from S3', data);
+    }
+  });
+
+  await attachment.remove();
+  res.json({ message: 'Attachment removed' });
+});
+
 module.exports = {
   getProjects,
   getProjectById,
@@ -206,4 +247,6 @@ module.exports = {
   getComments,
   addAttachment,
   getAttachments,
+  deleteComment,
+  deleteAttachment
 };

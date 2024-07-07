@@ -9,8 +9,10 @@ const {
   deleteProject,
   addComment,
   getComments,
+  deleteComment,
   addAttachment,
   getAttachments,
+  deleteAttachment,
 } = require('../controllers/projectController');
 
 const {
@@ -49,9 +51,15 @@ router.route('/:projectId/comments')
   .get(protect, getComments)
   .post(protect, addComment);
 
+router.route('/:projectId/comments/:commentId')
+  .delete(protect, deleteComment);
+
 // Attachment routes
 router.route('/:projectId/attachments')
   .get(protect, getAttachments)
   .post(protect, addAttachment);
+
+router.route('/:projectId/attachments/:attachmentId')
+  .delete(protect, deleteAttachment);
 
 module.exports = router;
