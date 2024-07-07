@@ -29,7 +29,8 @@
     "multer-gridfs-storage": "^5.0.2",
     "multer-s3": "^3.0.1",
     "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.14"
+    "nodemailer": "^6.9.14",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

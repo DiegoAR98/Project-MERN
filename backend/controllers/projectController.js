@@ -1,6 +1,4 @@
 const asyncHandler = require('express-async-handler');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const path = require('path');
@@ -9,28 +7,32 @@ const Comment = require('../models/Comment');
 const Attachment = require('../models/Attachment');
 require('dotenv').config();
 
-// Configure AWS SDK
-const s3 = new S3Client({
+const AWS = require('aws-sdk');
+
+const s3 = new AWS.S3({
+  apiVersion: '2006-03-01',
   region: process.env.AWS_REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
-  endpoint: `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com`, // Ensure correct endpoint
 });
 
-// Set up multer to use S3 for storage
-const upload = multer({
-  storage: multerS3({
-    s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    acl: 'public-read',
-    key: (req, file, cb) => {
-      cb(null, `${Date.now()}-${path.basename(file.originalname)}`);
-    },
-  }),
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB file size limit
-});
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+const params = (file) => {
+  const myFile = file.originalname.split('.');
+  const fileType = myFile[myFile.length - 1];
+
+  return {
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: `${Date.now()}-${file.originalname}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
+};
+
 // @desc    Get all projects for a user
 // @route   GET /api/projects
 // @access  Private
@@ -143,6 +145,8 @@ const getComments = asyncHandler(async (req, res) => {
 // @desc    Add an attachment to a project
 // @route   POST /api/projects/:projectId/attachments
 // @access  Private
+
+// Attachment route
 const addAttachment = [
   upload.single('file'),
   asyncHandler(async (req, res) => {
@@ -153,21 +157,35 @@ const addAttachment = [
       throw new Error('Project not found');
     }
 
-    const attachment = new Attachment({
-      project: req.params.projectId,
-      user: req.user._id,
-      filename: req.file.originalname,
-      fileUrl: req.file.location, // URL from S3
+    if (!req.file) {
+      res.status(400);
+      throw new Error('No file uploaded');
+    }
+
+    const uploadParams = params(req.file);
+    s3.upload(uploadParams, async (err, data) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+      } else {
+        const attachment = new Attachment({
+          project: req.params.projectId,
+          user: req.user._id,
+          filename: req.file.originalname,
+          fileUrl: data.Location,
+        });
+
+        await attachment.save();
+
+        project.attachments.push(attachment._id);
+        await project.save();
+
+        res.status(201).json(attachment);
+      }
     });
-
-    await attachment.save();
-
-    project.attachments.push(attachment._id);
-    await project.save();
-
-    res.status(201).json(attachment);
   }),
 ];
+
 
 // @desc    Get attachments for a project
 // @route   GET /api/projects/:projectId/attachments

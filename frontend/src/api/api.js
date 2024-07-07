@@ -115,10 +115,7 @@ export const getComments = async (projectId, token) => {
   return response.data;
 };
 
-export const addAttachment = async (projectId, file, token) => {
-  const formData = new FormData();
-  formData.append('file', file);
-
+export const addAttachment = async (projectId, formData, token) => {
   const response = await axios.post(`${API_URL}/projects/${projectId}/attachments`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,

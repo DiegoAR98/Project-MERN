@@ -91,8 +91,11 @@ const Project = () => {
 
   const handleAddAttachment = async () => {
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('file', file);
+  
     try {
-      const newAttachment = await addAttachment(id, file, token);
+      const newAttachment = await addAttachment(id, formData, token);
       setAttachments([...attachments, newAttachment]);
       setFile(null);
     } catch (error) {
@@ -193,7 +196,7 @@ const Project = () => {
       <div>
         {attachments.map((attachment) => (
           <div key={attachment._id}>
-            <a href={`/${attachment.path}`} target="_blank" rel="noopener noreferrer">
+            <a href={attachment.fileUrl} target="_blank" rel="noopener noreferrer">
               {attachment.filename}
             </a>
             <small>{attachment.user.name}</small>

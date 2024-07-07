@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const uploadRoutes = require('./routes/uploadRoutes'); // Import the new route
 const path = require('path');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
@@ -14,7 +15,6 @@ const cors = require('cors');
 const cron = require('node-cron');
 const moment = require('moment');
 const sendEmail = require('./utils/sendEmail');
-const uploadRoutes = require('./routes/uploadRoutes'); // Import the new route
 
 dotenv.config();
 connectDB();
