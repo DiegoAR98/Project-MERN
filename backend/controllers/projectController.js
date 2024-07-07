@@ -142,6 +142,26 @@ const getComments = asyncHandler(async (req, res) => {
   res.status(200).json(comments);
 });
 
+// @desc    Delete a comment
+// @route   DELETE /api/projects/:projectId/comments/:commentId
+// @access  Private
+const deleteComment = asyncHandler(async (req, res) => {
+  const comment = await Comment.findById(req.params.commentId);
+
+  if (!comment) {
+    res.status(404);
+    throw new Error('Comment not found');
+  }
+
+  if (comment.user.toString() !== req.user._id.toString()) {
+    res.status(401);
+    throw new Error('User not authorized');
+  }
+
+  await comment.remove();
+  res.json({ message: 'Comment removed' });
+});
+
 // @desc    Add an attachment to a project
 // @route   POST /api/projects/:projectId/attachments
 // @access  Private
@@ -186,7 +206,6 @@ const addAttachment = [
   }),
 ];
 
-
 // @desc    Get attachments for a project
 // @route   GET /api/projects/:projectId/attachments
 // @access  Private
@@ -194,6 +213,38 @@ const getAttachments = asyncHandler(async (req, res) => {
   const attachments = await Attachment.find({ project: req.params.projectId }).populate('user', 'name');
 
   res.status(200).json(attachments);
+});
+
+// @desc    Delete an attachment
+// @route   DELETE /api/projects/:projectId/attachments/:attachmentId
+// @access  Private
+const deleteAttachment = asyncHandler(async (req, res) => {
+  const attachment = await Attachment.findById(req.params.attachmentId);
+
+  if (!attachment) {
+    res.status(404);
+    throw new Error('Attachment not found');
+  }
+
+  if (attachment.user.toString() !== req.user._id.toString()) {
+    res.status(401);
+    throw new Error('User not authorized');
+  }
+
+  const params = {
+    Bucket: 'projectuploadsmern',
+    Key: attachment.fileUrl.split('/').pop(),
+  };
+
+  s3.deleteObject(params, async (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    } else {
+      await attachment.remove();
+      res.json({ message: 'Attachment removed' });
+    }
+  });
 });
 
 module.exports = {
@@ -204,6 +255,8 @@ module.exports = {
   deleteProject,
   addComment,
   getComments,
+  deleteComment,
   addAttachment,
   getAttachments,
+  deleteAttachment,
 };

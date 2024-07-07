@@ -115,6 +115,15 @@ export const getComments = async (projectId, token) => {
   return response.data;
 };
 
+export const deleteComment = async (projectId, commentId, token) => {
+  const response = await axios.delete(`${API_URL}/projects/${projectId}/comments/${commentId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 export const addAttachment = async (projectId, formData, token) => {
   const response = await axios.post(`${API_URL}/projects/${projectId}/attachments`, formData, {
     headers: {
@@ -127,6 +136,15 @@ export const addAttachment = async (projectId, formData, token) => {
 
 export const getAttachments = async (projectId, token) => {
   const response = await axios.get(`${API_URL}/projects/${projectId}/attachments`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const deleteAttachment = async (projectId, attachmentId, token) => {
+  const response = await axios.delete(`${API_URL}/projects/${projectId}/attachments/${attachmentId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
