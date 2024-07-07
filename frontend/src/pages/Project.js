@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProjectById, updateProject, getTasks, addTask } from '../api/api';
+import { getProjectById, updateProject, getTasks, addTask, addComment, getComments, addAttachment, getAttachments } from '../api/api';
 
 const Project = () => {
   const { id } = useParams();
@@ -14,6 +14,10 @@ const Project = () => {
   const [tasks, setTasks] = useState([]);
   const [taskName, setTaskName] = useState('');
   const [taskDueDate, setTaskDueDate] = useState('');
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState('');
+  const [attachments, setAttachments] = useState([]);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -28,8 +32,22 @@ const Project = () => {
       setTasks(data);
     };
 
+    const fetchComments = async () => {
+      const token = localStorage.getItem('token');
+      const data = await getComments(id, token);
+      setComments(data);
+    };
+
+    const fetchAttachments = async () => {
+      const token = localStorage.getItem('token');
+      const data = await getAttachments(id, token);
+      setAttachments(data);
+    };
+
     fetchProject();
     fetchTasks();
+    fetchComments();
+    fetchAttachments();
   }, [id]);
 
   const handleChange = (e) => {
@@ -57,6 +75,28 @@ const Project = () => {
       setTaskDueDate('');
     } catch (error) {
       console.error('Error adding task', error);
+    }
+  };
+
+  const handleAddComment = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const newComment = await addComment(id, { text: commentText }, token);
+      setComments([...comments, newComment]);
+      setCommentText('');
+    } catch (error) {
+      console.error('Error adding comment', error);
+    }
+  };
+
+  const handleAddAttachment = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const newAttachment = await addAttachment(id, file, token);
+      setAttachments([...attachments, newAttachment]);
+      setFile(null);
+    } catch (error) {
+      console.error('Error adding attachment', error);
     }
   };
 
@@ -132,6 +172,36 @@ const Project = () => {
         />
         <button onClick={handleAddTask}>Add Task</button>
       </div>
+
+      <h2>Comments</h2>
+      <div>
+        {comments.map((comment) => (
+          <div key={comment._id}>
+            <p>{comment.text}</p>
+            <small>{comment.user.name}</small>
+          </div>
+        ))}
+      </div>
+      <input
+        type="text"
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
+      />
+      <button onClick={handleAddComment}>Add Comment</button>
+
+      <h2>Attachments</h2>
+      <div>
+        {attachments.map((attachment) => (
+          <div key={attachment._id}>
+            <a href={`/${attachment.path}`} target="_blank" rel="noopener noreferrer">
+              {attachment.filename}
+            </a>
+            <small>{attachment.user.name}</small>
+          </div>
+        ))}
+      </div>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <button onClick={handleAddAttachment}>Add Attachment</button>
     </div>
   );
 };

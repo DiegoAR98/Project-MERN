@@ -14,6 +14,7 @@ const cors = require('cors');
 const cron = require('node-cron');
 const moment = require('moment');
 const sendEmail = require('./utils/sendEmail');
+const uploadRoutes = require('./routes/uploadRoutes'); // Import the new route
 
 dotenv.config();
 connectDB();
@@ -50,6 +51,7 @@ async function startApolloServer() {
 
   app.use('/api/users', userRoutes);
   app.use('/api/projects', projectRoutes);
+  app.use('/api/upload', uploadRoutes); // Use the new route
 
   app.get('/', (req, res) => {
     res.send('API is running...');

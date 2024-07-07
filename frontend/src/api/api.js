@@ -96,3 +96,43 @@ export const getTaskById = async (projectId, taskId, token) => {
   });
   return response.data;
 };
+
+export const addComment = async (projectId, comment, token) => {
+  const response = await axios.post(`${API_URL}/projects/${projectId}/comments`, comment, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const getComments = async (projectId, token) => {
+  const response = await axios.get(`${API_URL}/projects/${projectId}/comments`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const addAttachment = async (projectId, file, token) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await axios.post(`${API_URL}/projects/${projectId}/attachments`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const getAttachments = async (projectId, token) => {
+  const response = await axios.get(`${API_URL}/projects/${projectId}/attachments`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

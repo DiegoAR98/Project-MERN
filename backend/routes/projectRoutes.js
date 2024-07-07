@@ -7,6 +7,10 @@ const {
   createProject,
   updateProject,
   deleteProject,
+  addComment,
+  getComments,
+  addAttachment,
+  getAttachments,
 } = require('../controllers/projectController');
 
 const {
@@ -39,5 +43,15 @@ router.route('/:projectId/tasks/:taskId')
 
 router.route('/:projectId/tasks/:taskId/complete')
   .put(protect, markTaskComplete);
+
+// Comment routes
+router.route('/:projectId/comments')
+  .get(protect, getComments)
+  .post(protect, addComment);
+
+// Attachment routes
+router.route('/:projectId/attachments')
+  .get(protect, getAttachments)
+  .post(protect, addAttachment);
 
 module.exports = router;
