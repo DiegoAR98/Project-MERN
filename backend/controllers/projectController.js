@@ -26,7 +26,7 @@ const params = (file) => {
   const fileType = myFile[myFile.length - 1];
 
   return {
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: 'projectuploadsmern', // Hardcoded bucket name
     Key: `${Date.now()}-${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
