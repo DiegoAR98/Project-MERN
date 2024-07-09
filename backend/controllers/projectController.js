@@ -226,23 +226,20 @@ const deleteAttachment = asyncHandler(async (req, res) => {
     throw new Error('Attachment not found');
   }
 
-  if (attachment.user.toString() !== req.user._id.toString()) {
-    res.status(401);
-    throw new Error('User not authorized');
-  }
-
+  // Delete file from S3
   const params = {
     Bucket: 'projectuploadsmern',
     Key: attachment.fileUrl.split('/').pop(),
   };
 
-  s3.deleteObject(params, async (err) => {
+  s3.deleteObject(params, async (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
     } else {
+      // Delete attachment record from database
       await attachment.remove();
-      res.json({ message: 'Attachment removed' });
+      res.status(200).json({ message: 'Attachment deleted' });
     }
   });
 });

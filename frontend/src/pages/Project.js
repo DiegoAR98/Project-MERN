@@ -19,6 +19,7 @@ const Project = () => {
   const [commentText, setCommentText] = useState('');
   const [attachments, setAttachments] = useState([]);
   const [file, setFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -116,13 +117,26 @@ const Project = () => {
     const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('file', file);
-  
+
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+    if (file.size > MAX_FILE_SIZE) {
+      setErrorMessage('Attachment not allowed. Maximum file size is 50MB.');
+      return;
+    }
+
     try {
       const newAttachment = await addAttachment(id, formData, token);
       setAttachments([...attachments, newAttachment]);
       setFile(null);
+      setErrorMessage(''); // Clear error message
     } catch (error) {
       console.error('Error adding attachment', error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('Error uploading file');
+      }
     }
   };
 
@@ -141,7 +155,7 @@ const Project = () => {
     <div className="container">
       <h1>Edit Project</h1>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-section">
           <label>Name:</label>
           <input
             type="text"
@@ -150,7 +164,7 @@ const Project = () => {
             onChange={handleChange}
           />
         </div>
-        <div>
+        <div className="form-section">
           <label>Description:</label>
           <textarea
             name="description"
@@ -158,7 +172,7 @@ const Project = () => {
             onChange={handleChange}
           ></textarea>
         </div>
-        <div>
+        <div className="form-section">
           <label>Category:</label>
           <select
             name="category"
@@ -171,7 +185,7 @@ const Project = () => {
             <option value="others">Others</option>
           </select>
         </div>
-        <div>
+        <div className="form-section">
           <label>Due Date:</label>
           <input
             type="date"
@@ -183,65 +197,73 @@ const Project = () => {
         <button type="submit">Update</button>
       </form>
 
-      <h2>Tasks</h2>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task._id}>
-            <Link to={`/project/${id}/task/${task._id}`}>
-              {task.name} - Due: {new Date(task.dueDate).toLocaleDateString()}
-            </Link>
-            <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <div className="tasks-section">
+        <h2>Tasks</h2>
+        <ul>
+          {tasks.map((task) => (
+            <li key={task._id}>
+              <Link to={`/project/${id}/task/${task._id}`}>
+                {task.name} - Due: {new Date(task.dueDate).toLocaleDateString()}
+              </Link>
+              <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
 
-      <div>
-        <h3>Add Task</h3>
+        <div>
+          <h3>Add Task</h3>
+          <input
+            type="text"
+            placeholder="Task Name"
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+          />
+          <input
+            type="date"
+            value={taskDueDate}
+            onChange={(e) => setTaskDueDate(e.target.value)}
+          />
+          <button onClick={handleAddTask}>Add Task</button>
+        </div>
+      </div>
+
+      <div className="comments-section">
+        <h2>Comments</h2>
+        <div>
+          {comments.map((comment) => (
+            <div key={comment._id}>
+              <p>{comment.text}</p>
+              <small>{comment.user.name}</small>
+              <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+            </div>
+          ))}
+        </div>
         <input
           type="text"
-          placeholder="Task Name"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
         />
-        <input
-          type="date"
-          value={taskDueDate}
-          onChange={(e) => setTaskDueDate(e.target.value)}
-        />
-        <button onClick={handleAddTask}>Add Task</button>
+        <button onClick={handleAddComment}>Add Comment</button>
       </div>
 
-      <h2>Comments</h2>
-      <div>
-        {comments.map((comment) => (
-          <div key={comment._id}>
-            <p>{comment.text}</p>
-            <small>{comment.user.name}</small>
-            <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
-          </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={commentText}
-        onChange={(e) => setCommentText(e.target.value)}
-      />
-      <button onClick={handleAddComment}>Add Comment</button>
+      <div className="attachments-section">
+        <h2>Attachments</h2>
+        <div>
+          {attachments.map((attachment) => (
+            <div key={attachment._id}>
+              <a href={attachment.fileUrl} target="_blank" rel="noopener noreferrer">
+                {attachment.filename}
+              </a>
+              <small>{attachment.user.name}</small>
+              <button onClick={() => handleDeleteAttachment(attachment._id)}>Delete</button>
+            </div>
+          ))}
+        </div>
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <button onClick={handleAddAttachment}>Add Attachment</button>
 
-      <h2>Attachments</h2>
-      <div>
-        {attachments.map((attachment) => (
-          <div key={attachment._id}>
-            <a href={attachment.fileUrl} target="_blank" rel="noopener noreferrer">
-              {attachment.filename}
-            </a>
-            <small>{attachment.user.name}</small>
-            <button onClick={() => handleDeleteAttachment(attachment._id)}>Delete</button>
-          </div>
-        ))}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </div>
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <button onClick={handleAddAttachment}>Add Attachment</button>
     </div>
   );
 };

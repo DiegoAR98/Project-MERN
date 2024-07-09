@@ -82,4 +82,26 @@
   button.delete-button:hover {
     background-color: #c82333;
   }
+  .error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .form-section {
+    margin-bottom: 20px;
+  }
+  
+  .attachments-section {
+    margin-top: 20px;
+  }
+  
+  .comments-section {
+    margin-top: 20px;
+  }
+  
+  .tasks-section {
+    margin-top: 20px;
+  }
   

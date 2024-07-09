@@ -62,4 +62,7 @@ router.route('/:projectId/attachments')
 router.route('/:projectId/attachments/:attachmentId')
   .delete(protect, deleteAttachment);
 
+router.route('/:projectId/attachments/:attachmentId').delete(protect, deleteAttachment);
+
+
 module.exports = router;
