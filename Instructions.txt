@@ -1,0 +1,51 @@
+# Instructions to Run the Project in Development Mode
+
+## Environment Variables
+
+Please create a `.env` file in the `backend` directory of the project with the following content:
+
+PORT=5000
+MONGODB_CONNECTION_STRING=mongodb://localhost:27017/ProjectManagerDB
+JWT_SECRET=your_jwt_secret
+EMAIL_USERNAME=projectmanagermern@sample.com
+EMAIL_PASSWORD=samplePassword123
+EMAIL_FROM=projectmanagermern@sample.com
+CLIENT_URL=http://localhost:3000
+MONGO_URI=mongodb://localhost:27017/ProjectManagerDB
+AWS_ACCESS_KEY_ID=EXAMPLEACCESSKEY
+AWS_SECRET_ACCESS_KEY=EXAMPLESECRETACCESSKEY
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=samplebucketname
+
+## Steps to set up the Project
+
+## Install Dependencies:
+
+root run: 
+
+npm install --legacy-peer-deps
+
+backend run: 
+
+npm i 
+
+frontend run: 
+
+npm i 
+
+## Steps to run the project
+
+Open the terminal on the backend and run:
+
+npm run dev
+
+On the frontend run:
+
+npm start
+
+Navigate to: 
+
+http://localhost:3000/
+
+
+Happy coding! Lmk if you need help! 
