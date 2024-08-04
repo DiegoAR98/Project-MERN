@@ -20,9 +20,15 @@ const VerifyEmail = () => {
   }, [token]);
 
   return (
-    <div className="container">
-      <h1>Email Verification</h1>
-      <p>{message}</p>
+    <div className="container my-5">
+      <div className="card">
+        <div className="card-body text-center">
+          <h1 className="card-title">Email Verification</h1>
+          <p className={`card-text ${message.includes('successfully') ? 'text-success' : 'text-danger'}`}>
+            {message}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

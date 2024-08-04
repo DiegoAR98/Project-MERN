@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import CreateProject from './pages/CreateProject';
 import Project from './pages/Project';
 import Register from './pages/Register';
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/create-project" element={<PrivateRoute element={CreateProject} />} />
         <Route path="/project/:id" element={<PrivateRoute element={Project} />} />
         <Route path="/project/:projectId/task/:taskId" element={<PrivateRoute element={Task} />} />

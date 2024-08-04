@@ -21,36 +21,39 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Register</h1>
+    <div className="container my-5">
+      <h1 className="mb-4">Register</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
+        <div className="mb-3">
+          <label className="form-label">Name:</label>
           <input
             type="text"
+            className="form-control"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div>
-          <label>Email:</label>
+        <div className="mb-3">
+          <label className="form-label">Email:</label>
           <input
             type="email"
+            className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="mb-3">
+          <label className="form-label">Password:</label>
           <input
             type="password"
+            className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="btn btn-primary">Register</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <div className="alert alert-info mt-3">{message}</div>}
     </div>
   );
 };

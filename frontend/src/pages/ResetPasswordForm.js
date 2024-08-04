@@ -20,20 +20,21 @@ const ResetPasswordForm = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Reset Password</h1>
+    <div className="container my-5">
+      <h1 className="mb-4">Reset Password</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>New Password:</label>
+        <div className="mb-3">
+          <label className="form-label">New Password:</label>
           <input
             type="password"
+            className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Reset Password</button>
+        <button type="submit" className="btn btn-primary">Reset Password</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <div className="alert alert-info mt-3">{message}</div>}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProjectById, updateProject, getTasks, addTask, addComment, getComments, addAttachment, getAttachments, deleteTask, deleteComment, deleteAttachment } from '../api/api';
-import '../styles/Project.css';
 
 const Project = () => {
   const { id } = useParams();
@@ -152,30 +151,33 @@ const Project = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Edit Project</h1>
+    <div className="container my-5">
+      <h1 className="mb-4">Edit Project</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-section">
-          <label>Name:</label>
+        <div className="mb-3">
+          <label className="form-label">Name:</label>
           <input
             type="text"
             name="name"
+            className="form-control"
             value={project.name}
             onChange={handleChange}
           />
         </div>
-        <div className="form-section">
-          <label>Description:</label>
+        <div className="mb-3">
+          <label className="form-label">Description:</label>
           <textarea
             name="description"
+            className="form-control"
             value={project.description}
             onChange={handleChange}
           ></textarea>
         </div>
-        <div className="form-section">
-          <label>Category:</label>
+        <div className="mb-3">
+          <label className="form-label">Category:</label>
           <select
             name="category"
+            className="form-select"
             value={project.category}
             onChange={handleChange}
           >
@@ -185,84 +187,91 @@ const Project = () => {
             <option value="others">Others</option>
           </select>
         </div>
-        <div className="form-section">
-          <label>Due Date:</label>
+        <div className="mb-3">
+          <label className="form-label">Due Date:</label>
           <input
             type="date"
             name="dueDate"
+            className="form-control"
             value={project.dueDate}
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Update</button>
+        <button type="submit" className="btn btn-primary">Update</button>
       </form>
 
-      <div className="tasks-section">
+      <div className="my-5">
         <h2>Tasks</h2>
-        <ul>
+        <ul className="list-group mb-3">
           {tasks.map((task) => (
-            <li key={task._id}>
+            <li key={task._id} className="list-group-item d-flex justify-content-between align-items-center">
               <Link to={`/project/${id}/task/${task._id}`}>
                 {task.name} - Due: {new Date(task.dueDate).toLocaleDateString()}
               </Link>
-              <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
+              <button className="btn btn-danger btn-sm" onClick={() => handleDeleteTask(task._id)}>Delete</button>
             </li>
           ))}
         </ul>
 
-        <div>
+        <div className="mb-3">
           <h3>Add Task</h3>
           <input
             type="text"
+            className="form-control mb-2"
             placeholder="Task Name"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
           />
           <input
             type="date"
+            className="form-control mb-2"
             value={taskDueDate}
             onChange={(e) => setTaskDueDate(e.target.value)}
           />
-          <button onClick={handleAddTask}>Add Task</button>
+          <button className="btn btn-success" onClick={handleAddTask}>Add Task</button>
         </div>
       </div>
 
-      <div className="comments-section">
+      <div className="my-5">
         <h2>Comments</h2>
-        <div>
+        <div className="mb-3">
           {comments.map((comment) => (
-            <div key={comment._id}>
-              <p>{comment.text}</p>
-              <small>{comment.user.name}</small>
-              <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+            <div key={comment._id} className="card mb-2">
+              <div className="card-body">
+                <p>{comment.text}</p>
+                <small className="text-muted">{comment.user.name}</small>
+                <button className="btn btn-danger btn-sm float-end" onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+              </div>
             </div>
           ))}
         </div>
         <input
           type="text"
+          className="form-control mb-2"
+          placeholder="Add a comment"
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
         />
-        <button onClick={handleAddComment}>Add Comment</button>
+        <button className="btn btn-success" onClick={handleAddComment}>Add Comment</button>
       </div>
 
-      <div className="attachments-section">
+      <div className="my-5">
         <h2>Attachments</h2>
-        <div>
+        <div className="mb-3">
           {attachments.map((attachment) => (
-            <div key={attachment._id}>
+            <div key={attachment._id} className="d-flex justify-content-between align-items-center">
               <a href={attachment.fileUrl} target="_blank" rel="noopener noreferrer">
                 {attachment.filename}
               </a>
-              <small>{attachment.user.name}</small>
-              <button onClick={() => handleDeleteAttachment(attachment._id)}>Delete</button>
+              <small className="text-muted">{attachment.user.name}</small>
+              <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAttachment(attachment._id)}>Delete</button>
             </div>
           ))}
         </div>
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        <button onClick={handleAddAttachment}>Add Attachment</button>
+        <input type="file" className="form-control mb-2" onChange={(e) => setFile(e.target.files[0])} />
+        <button className="btn btn-success" onClick={handleAddAttachment}>Add Attachment</button>
 
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
       </div>
     </div>
   );

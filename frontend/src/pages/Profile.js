@@ -31,34 +31,37 @@ const Profile = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container my-5">
       <h1>Profile</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
+      <form onSubmit={handleSubmit} className="mt-4">
+        <div className="mb-3">
+          <label className="form-label">Name:</label>
           <input
             type="text"
+            className="form-control"
             value={user.name}
             onChange={(e) => setUser({ ...user, name: e.target.value })}
           />
         </div>
-        <div>
-          <label>Email:</label>
+        <div className="mb-3">
+          <label className="form-label">Email:</label>
           <input
             type="email"
+            className="form-control"
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="mb-3">
+          <label className="form-label">Password:</label>
           <input
             type="password"
+            className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Update</button>
+        <button type="submit" className="btn btn-primary">Update</button>
       </form>
     </div>
   );

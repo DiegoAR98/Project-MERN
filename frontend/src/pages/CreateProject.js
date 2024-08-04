@@ -22,27 +22,30 @@ const CreateProject = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Create Project</h1>
+    <div className="container my-5">
+      <h1 className="mb-4">Create Project</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
+        <div className="mb-3">
+          <label className="form-label">Name:</label>
           <input
             type="text"
+            className="form-control"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div>
-          <label>Description:</label>
+        <div className="mb-3">
+          <label className="form-label">Description:</label>
           <textarea
+            className="form-control"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
-        <div>
-          <label>Category:</label>
+        <div className="mb-3">
+          <label className="form-label">Category:</label>
           <select
+            className="form-select"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -52,15 +55,16 @@ const CreateProject = () => {
             <option value="others">Others</option>
           </select>
         </div>
-        <div>
-          <label>Due Date:</label>
+        <div className="mb-3">
+          <label className="form-label">Due Date:</label>
           <input
             type="date"
+            className="form-control"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit" className="btn btn-primary">Create</button>
       </form>
     </div>
   );

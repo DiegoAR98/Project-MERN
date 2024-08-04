@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getTaskById, updateTask, deleteTask, markTaskComplete } from '../api/api';
 
 const Task = () => {
   const { projectId, taskId } = useParams();
+  const navigate = useNavigate();
   const [task, setTask] = useState({ name: '', dueDate: '', isComplete: false });
   const [name, setName] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -29,6 +30,7 @@ const Task = () => {
     const token = localStorage.getItem('token');
     try {
       await updateTask(projectId, taskId, { name, dueDate, isComplete }, token);
+      navigate(`/project/${projectId}`);
     } catch (error) {
       console.error('Error updating task', error);
     }
@@ -38,6 +40,7 @@ const Task = () => {
     const token = localStorage.getItem('token');
     try {
       await deleteTask(projectId, taskId, token);
+      navigate(`/project/${projectId}`);
     } catch (error) {
       console.error('Error deleting task', error);
     }
@@ -54,37 +57,40 @@ const Task = () => {
   };
 
   return (
-    <div>
-      <h1>Task Details</h1>
-      <div>
-        <label>Name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Due Date:</label>
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>
+    <div className="container my-5">
+      <h1 className="mb-4">Task Details</h1>
+      <form>
+        <div className="mb-3">
+          <label className="form-label">Name:</label>
+          <input
+            type="text"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Due Date:</label>
+          <input
+            type="date"
+            className="form-control"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+        </div>
+        <div className="form-check mb-3">
           <input
             type="checkbox"
+            className="form-check-input"
             checked={isComplete}
             onChange={(e) => setIsComplete(e.target.checked)}
           />
-          Complete
-        </label>
-      </div>
-      <button onClick={handleUpdate}>Update Task</button>
-      <button onClick={handleDelete}>Delete Task</button>
-      <button onClick={handleMarkComplete}>Mark as Complete</button>
+          <label className="form-check-label">Complete</label>
+        </div>
+        <button type="button" className="btn btn-primary me-2" onClick={handleUpdate}>Update Task</button>
+        <button type="button" className="btn btn-danger me-2" onClick={handleDelete}>Delete Task</button>
+        <button type="button" className="btn btn-success" onClick={handleMarkComplete}>Mark as Complete</button>
+      </form>
     </div>
   );
 };
