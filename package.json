@@ -2,7 +2,7 @@
   "name": "project-mern",
   "version": "1.0.0",
   "description": "Project Manager application using MERN",
-  "main": "backend/server.js",
+  "main": "index.js",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "npm run build && node backend/server.js",
