@@ -4,11 +4,16 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const [projects, setProjects] = useState([]);
+  const [userName, setUserName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      setUserName(userInfo.name); // Set the user's name
+    }
+
     const fetchProjects = async () => {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (userInfo) {
         const config = {
           headers: {
@@ -77,6 +82,7 @@ const Dashboard = () => {
       }
     }
   };
+
   return (
     <div className="container my-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -85,12 +91,18 @@ const Dashboard = () => {
           Create Project
         </button>
       </div>
+
+      {/* Welcome Message */}
+      <div className="mb-4">
+        <h2>Hi {userName}, welcome! Here are your projects:</h2>
+      </div>
+
       <div className="row">
         {projects.length > 0 ? (
           projects.map((project) => (
             <div key={project._id} className="col-md-4 mb-4">
-<div className={`card h-100 ${project.isComplete ? 'bg-success bg-opacity-25' : ''}`}>
-<div className="card-body">
+              <div className={`card h-100 ${project.isComplete ? 'bg-success bg-opacity-25' : ''}`}>
+                <div className="card-body">
                   <h5 className="card-title">{project.name}</h5>
                   <p className="card-text">
                     Category: {project.category} <br />

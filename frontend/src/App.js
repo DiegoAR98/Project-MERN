@@ -13,6 +13,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import Task from './pages/Task';
 import MainPage from './pages/MainPage';  // Import MainPage
 import Footer from './components/Footer';  // Import Footer
+import './App.css';  // Include your CSS file
 
 function App() {
   return (
