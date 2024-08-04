@@ -2,19 +2,19 @@
   "name": "project-mern",
   "version": "1.0.0",
   "description": "Project Manager application using MERN",
-  "main": "backend/server.js",
-  "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-    "start:prod": "npm run build && node backend/server.js",
-    "start:dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
-    "install": "cd backend && npm i && cd ../frontend && npm i",
-    "build": "cd frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build",
-    "heroku-postbuild": "npm run install && npm run build"
-  },
-  "engines": {
-    "node": "20.x",
-    "npm": "10.x"
-  },
+  "main": "index.js",
+ "scripts": {
+  "start": "node backend/server.js",
+  "server": "nodemon backend/server.js",
+  "client": "npm start --prefix frontend",
+  "build": "npm run build --prefix frontend",
+  "heroku-postbuild": "npm install --legacy-peer-deps && npm run build"
+},
+"engines": {
+  "node": "20.x",
+  "npm": "10.x"
+}
+,
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
@@ -23,12 +23,10 @@
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
     "mongoose": "^8.4.5",
-    "multer": "1.4.4",
+    "multer": "^1.4.5-lts.1",
     "multer-gridfs-storage": "^5.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4",
-    "cross-env": "^7.0.3",
-    "concurrently": "^7.2.2"
+    "nodemon": "^3.1.4"
   }
 }
