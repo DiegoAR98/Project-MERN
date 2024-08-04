@@ -4,15 +4,16 @@
   "description": "Project Manager application using MERN",
   "main": "index.js",
   "scripts": {
-  "start": "node backend/server.js",
-  "server": "nodemon backend/server.js",
-  "client": "npm start --prefix frontend",
-  "build": "npm run build --prefix frontend",
-  "heroku-postbuild": "npm run build"
-},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "heroku-postbuild": "npm install --prefix frontend --legacy-peer-deps && npm run build --prefix frontend"
+  },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
