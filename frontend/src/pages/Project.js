@@ -114,16 +114,23 @@ const Project = () => {
 
   const handleAddAttachment = async () => {
     const token = localStorage.getItem('token');
+  
+    // Check if no file is selected
+    if (!file) {
+      setErrorMessage('Please select a file to upload.');
+      return;
+    }
+  
     const formData = new FormData();
     formData.append('file', file);
-
+  
     const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
+  
     if (file.size > MAX_FILE_SIZE) {
       setErrorMessage('Attachment not allowed. Maximum file size is 50MB.');
       return;
     }
-
+  
     try {
       const newAttachment = await addAttachment(id, formData, token);
       setAttachments([...attachments, newAttachment]);
@@ -138,7 +145,6 @@ const Project = () => {
       }
     }
   };
-
   const handleDeleteAttachment = async (attachmentId) => {
     const token = localStorage.getItem('token');
     try {

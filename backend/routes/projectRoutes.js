@@ -7,6 +7,8 @@ const {
   createProject,
   updateProject,
   deleteProject,
+  markProjectComplete,
+  reopenProject, // Added this line for reopening a project
   addComment,
   getComments,
   deleteComment,
@@ -62,7 +64,8 @@ router.route('/:projectId/attachments')
 router.route('/:projectId/attachments/:attachmentId')
   .delete(protect, deleteAttachment);
 
-router.route('/:projectId/attachments/:attachmentId').delete(protect, deleteAttachment);
-
+// Project completion routes
+router.put('/:id/complete', protect, markProjectComplete);
+router.put('/:id/reopen', protect, reopenProject); // Added this line for reopening a project
 
 module.exports = router;

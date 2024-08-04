@@ -244,10 +244,42 @@ const deleteAttachment = asyncHandler(async (req, res) => {
   });
 });
 
+
+// Mark project as complete
+const markProjectComplete = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.id);
+
+  if (project) {
+    project.isComplete = true;
+    await project.save();
+    res.status(200).json(project);
+  } else {
+    res.status(404);
+    throw new Error('Project not found');
+  }
+});
+
+// Reopen a completed project
+const reopenProject = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.id);
+
+  if (project) {
+    project.isComplete = false;
+    await project.save();
+    res.status(200).json(project);
+  } else {
+    res.status(404);
+    throw new Error('Project not found');
+  }
+});
+
+
 module.exports = {
   getProjects,
   getProjectById,
   createProject,
+  markProjectComplete,
+  reopenProject,
   updateProject,
   deleteProject,
   addComment,

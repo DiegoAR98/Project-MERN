@@ -32,6 +32,51 @@ const Dashboard = () => {
     navigate('/create-project');
   };
 
+  const handleCompleteProject = async (projectId) => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      try {
+        const { data } = await axios.put(`http://localhost:5000/api/projects/${projectId}/complete`, {}, config);
+        // Update the project state after marking it complete
+        setProjects((prevProjects) =>
+          prevProjects.map((project) =>
+            project._id === projectId ? { ...project, isComplete: data.isComplete } : project
+          )
+        );
+      } catch (error) {
+        console.error('Error marking project as complete', error);
+      }
+    }
+  };
+  
+  const handleReopenProject = async (projectId) => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      try {
+        const { data } = await axios.put(`http://localhost:5000/api/projects/${projectId}/reopen`, {}, config);
+        // Update the project state after reopening it
+        setProjects((prevProjects) =>
+          prevProjects.map((project) =>
+            project._id === projectId ? { ...project, isComplete: data.isComplete } : project
+          )
+        );
+      } catch (error) {
+        console.error('Error reopening project', error);
+      }
+    }
+  };
   return (
     <div className="container my-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -44,16 +89,38 @@ const Dashboard = () => {
         {projects.length > 0 ? (
           projects.map((project) => (
             <div key={project._id} className="col-md-4 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
+<div className={`card h-100 ${project.isComplete ? 'bg-success bg-opacity-25' : ''}`}>
+<div className="card-body">
                   <h5 className="card-title">{project.name}</h5>
                   <p className="card-text">
                     Category: {project.category} <br />
                     Due Date: {new Date(project.dueDate).toLocaleDateString()}
                   </p>
-                  <Link to={`/project/${project._id}`} className="btn btn-outline-primary">
-                    View Project
-                  </Link>
+                  {project.isComplete ? (
+                    <>
+                      <button
+                        className="btn btn-success mb-2"
+                        onClick={() => handleReopenProject(project._id)}
+                      >
+                        Reopen Project
+                      </button>
+                      <Link to={`/project/${project._id}`} className="btn btn-outline-primary">
+                        View Project
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-warning mb-2"
+                        onClick={() => handleCompleteProject(project._id)}
+                      >
+                        Mark as Completed
+                      </button>
+                      <Link to={`/project/${project._id}`} className="btn btn-outline-primary">
+                        View Project
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

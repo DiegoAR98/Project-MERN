@@ -25,6 +25,10 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isComplete: {
+    type: Boolean,
+    default: false, // By default, a project is not completed
+  },
   description: {
     type: String,
   },
