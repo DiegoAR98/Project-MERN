@@ -6,15 +6,16 @@ const {
   resetPassword,
   verifyEmail,
   setNewPassword,
+  getUserProfile,  // Import the new function
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.route('/register').post(registerUser);
 router.route('/login').post(authUser);
-router.route('/profile').put(protect, updateUserProfile);
+router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile); // Add the GET route
 router.route('/reset-password').post(resetPassword);
-router.route('/reset-password/:token').post(setNewPassword); // Add this route
+router.route('/reset-password/:token').post(setNewPassword);
 router.route('/verify-email/:token').get(verifyEmail);
 
 module.exports = router;
