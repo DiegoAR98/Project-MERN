@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
-const uploadRoutes = require('./routes/uploadRoutes'); // Import the new route
+const uploadRoutes = require('./routes/uploadRoutes');
 const path = require('path');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
@@ -15,13 +15,27 @@ const cors = require('cors');
 const cron = require('node-cron');
 const moment = require('moment');
 const sendEmail = require('./utils/sendEmail');
+const contactRoutes = require('./routes/contactRoutes');
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// Use JSON middleware
 app.use(express.json());
-app.use(cors());
+
+// Enable CORS for all routes
+app.use(cors({
+  origin: 'http://localhost:3000', // Allows requests from your frontend
+  credentials: true, // Allow cookies to be sent with requests
+}));
+
+// Define your routes
+app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/contact', contactRoutes);
 
 const getUser = async (token) => {
   if (token) {
@@ -49,10 +63,6 @@ async function startApolloServer() {
   await server.start();
   server.applyMiddleware({ app });
 
-  app.use('/api/users', userRoutes);
-  app.use('/api/projects', projectRoutes);
-  app.use('/api/upload', uploadRoutes); // Use the new route
-
   app.get('/', (req, res) => {
     res.send('API is running...');
   });
@@ -66,13 +76,10 @@ async function startApolloServer() {
 }
 
 // Schedule email notifications
-cron.schedule('0 8 * * *', async () => { // Run every minute for testing purposes
-  console.log('Running cron job for email notifications'); // Add this line
+cron.schedule('0 8 * * *', async () => {
+  console.log('Running cron job for email notifications');
   const today = moment().startOf('day');
-  const upcomingDeadline = moment().add(1, 'days').startOf('day'); // Change to 1 day for testing
-
-  console.log(`Today: ${today}`);
-  console.log(`Upcoming Deadline: ${upcomingDeadline}`);
+  const upcomingDeadline = moment().add(1, 'days').startOf('day');
 
   const projects = await Project.find({
     dueDate: { $gte: today.toDate(), $lte: upcomingDeadline.toDate() },

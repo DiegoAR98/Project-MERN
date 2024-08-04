@@ -16,9 +16,11 @@ const Profile = () => {
       }
   
       try {
-        const { data } = await axios.get('/api/users/profile', {
+        console.log('Fetching profile with token:', token); // Debugging line
+        const { data } = await axios.get('http://localhost:5000/api/users/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log('Profile data received:', data); // Debugging line
         setUser(data);
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data || error.message);
@@ -27,18 +29,22 @@ const Profile = () => {
   
     fetchProfile();
   }, []);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    await axios.put(
-      '/api/users/profile',
-      { ...user, password },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    navigate('/dashboard');
+    try {
+      await axios.put(
+        '/api/users/profile',
+        { ...user, password },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      navigate('/dashboard');
+    } catch (error) {
+      console.error("Error updating profile:", error.response?.data || error.message);
+    }
   };
+  
 
   return (
     <div className="container my-5">
