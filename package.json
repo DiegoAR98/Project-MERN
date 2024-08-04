@@ -9,7 +9,7 @@
     "start:dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
     "install": "cd backend && npm i && cd ../frontend && npm i",
 "build": "cd frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build",
-"heroku-postbuild": "npm run install && npm start"
+"heroku-postbuild": "npm run install && npm run build"
   },
   "engines": {
     "node": "20.x",
