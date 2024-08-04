@@ -10,14 +10,24 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('/api/users/profile', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(data);
+      if (!token) {
+        console.error("Token is missing from localStorage.");
+        return;
+      }
+  
+      try {
+        const { data } = await axios.get('/api/users/profile', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
+      }
     };
-
+  
     fetchProfile();
   }, []);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
