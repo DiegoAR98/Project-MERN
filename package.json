@@ -2,14 +2,14 @@
   "name": "project-mern",
   "version": "1.0.0",
   "description": "Project Manager application using MERN",
-  "main": "index.js",
- "scripts": {
-  "start": "node backend/server.js",
-  "server": "nodemon backend/server.js",
-  "client": "npm start --prefix frontend",
-  "build": "npm run build --prefix frontend",
-  "heroku-postbuild": "npm install --legacy-peer-deps && npm install --prefix frontend --legacy-peer-deps && npm run build --prefix frontend"
-},
+  "main": "server/server.js",  
+  "scripts": {
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "npm run build && node server/server.js",
+    "start:dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "build": "cd client && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build"
+  },
 "engines": {
   "node": "20.x",
   "npm": "10.x"
