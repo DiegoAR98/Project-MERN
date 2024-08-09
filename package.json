@@ -9,7 +9,7 @@
     "start:dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
     "install": "cd backend && npm i && cd ../frontend && npm i",
     "build": "cd frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build",
-"heroku-postbuild": "npm install --only=dev && npm run build"
+    "heroku-postbuild": "npm install --only=dev && npm run build"
   },
   "engines": {
     "node": "20.x",
@@ -19,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "cross-env": "^7.0.3",
     "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
