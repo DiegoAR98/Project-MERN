@@ -7,6 +7,9 @@ const Profile = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // Use the environment variable for the API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
@@ -17,7 +20,7 @@ const Profile = () => {
   
       try {
         console.log('Fetching profile with token:', token); // Debugging line
-        const { data } = await axios.get('http://localhost:5000/api/users/profile', {
+        const { data } = await axios.get(`${API_URL}/api/users/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Profile data received:', data); // Debugging line
@@ -28,14 +31,14 @@ const Profile = () => {
     };
   
     fetchProfile();
-  }, []);
+  }, [API_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        '/api/users/profile',
+        `${API_URL}/api/users/profile`,
         { ...user, password },
         { headers: { Authorization: `Bearer ${token}` } }
       );

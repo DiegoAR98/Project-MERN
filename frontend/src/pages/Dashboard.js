@@ -7,6 +7,9 @@ const Dashboard = () => {
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
 
+  // Use the environment variable for the API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
@@ -22,7 +25,7 @@ const Dashboard = () => {
         };
 
         try {
-          const { data } = await axios.get('http://localhost:5000/api/projects', config);
+          const { data } = await axios.get(`${API_URL}/api/projects`, config);
           setProjects(data);
         } catch (error) {
           console.error('Error fetching projects', error);
@@ -31,7 +34,7 @@ const Dashboard = () => {
     };
 
     fetchProjects();
-  }, []);
+  }, [API_URL]);
 
   const handleCreateProject = () => {
     navigate('/create-project');
@@ -45,9 +48,9 @@ const Dashboard = () => {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-  
+
       try {
-        const { data } = await axios.put(`http://localhost:5000/api/projects/${projectId}/complete`, {}, config);
+        const { data } = await axios.put(`${API_URL}/api/projects/${projectId}/complete`, {}, config);
         // Update the project state after marking it complete
         setProjects((prevProjects) =>
           prevProjects.map((project) =>
@@ -59,7 +62,7 @@ const Dashboard = () => {
       }
     }
   };
-  
+
   const handleReopenProject = async (projectId) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
@@ -68,9 +71,9 @@ const Dashboard = () => {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-  
+
       try {
-        const { data } = await axios.put(`http://localhost:5000/api/projects/${projectId}/reopen`, {}, config);
+        const { data } = await axios.put(`${API_URL}/api/projects/${projectId}/reopen`, {}, config);
         // Update the project state after reopening it
         setProjects((prevProjects) =>
           prevProjects.map((project) =>

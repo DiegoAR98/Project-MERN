@@ -9,10 +9,13 @@ const Register = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  // Use the environment variable for the API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users/register', { name, email, password });
+      await axios.post(`${API_URL}/api/users/register`, { name, email, password });
       setMessage('Registration successful! Please check your email to verify your account.');
       navigate('/login');
     } catch (error) {

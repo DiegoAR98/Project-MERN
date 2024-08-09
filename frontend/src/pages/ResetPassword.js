@@ -5,10 +5,13 @@ const ResetPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  // Use the environment variable for the API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users/reset-password', { email });
+      await axios.post(`${API_URL}/api/users/reset-password`, { email });
       setMessage('Password reset email sent. Please check your email.');
     } catch (error) {
       setMessage('Password reset failed. Please try again.');
