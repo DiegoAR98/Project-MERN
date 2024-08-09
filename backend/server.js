@@ -25,9 +25,18 @@ const app = express();
 // Use JSON middleware
 app.use(express.json());
 
-// Enable CORS for all routes
+const allowedOrigins = [process.env.CLIENT_URL, 'https://projectmern1-7bb9c43acad8.herokuapp.com'];
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Allows requests from your frontend
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true, // Allow cookies to be sent with requests
 }));
 
