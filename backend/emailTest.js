@@ -4,7 +4,7 @@ const sendEmail = require('./utils/sendEmail');
 const testEmail = async () => {
   try {
     await sendEmail({
-      to: 'diegoaraujolive@hotmail.com',  // Replace with your actual email address
+      to: 'projectmanagermern@outlook.com',  // Replace with your actual email address
       subject: 'Test Email',
       text: 'This is a test email from your Project Manager application.'
     });
