@@ -5,7 +5,7 @@ import { getTaskById, updateTask, deleteTask, markTaskComplete } from '../api/ap
 const Task = () => {
   const { projectId, taskId } = useParams();
   const navigate = useNavigate();
-  const [task, setTask] = useState({ name: '', dueDate: '', isComplete: false });
+  const [setTask] = useState({ name: '', dueDate: '', isComplete: false });
   const [name, setName] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [isComplete, setIsComplete] = useState(false);

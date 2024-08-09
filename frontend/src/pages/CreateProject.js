@@ -11,7 +11,14 @@ const CreateProject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Parse the JSON string
+    const token = userInfo?.token; // Extract the token
+  
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+  
     const project = { name, description, category, dueDate };
     try {
       await createProject(project, token);
@@ -20,6 +27,7 @@ const CreateProject = () => {
       console.error('Error creating project', error);
     }
   };
+  
 
   return (
     <div className="container my-5">
