@@ -8,8 +8,8 @@
     "start:prod": "npm run build && node backend/server.js",
     "start:dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider concurrently \"cd backend && npm run watch\" \"cd frontend && npm start\"",
     "install": "cd backend && npm i && cd ../frontend && npm i",
-"build": "cd frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build",
-"heroku-postbuild": "npm run install && npm run build"
+    "build": "cd frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm run build",
+"heroku-postbuild": "npm install --only=dev && npm run build"
   },
   "engines": {
     "node": "20.x",
@@ -27,8 +27,8 @@
     "multer-gridfs-storage": "^5.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4",
+    "concurrently": "^7.2.2",
     "cross-env": "^7.0.3",
-    "concurrently": "^7.2.2"
+    "nodemon": "^3.1.4"
   }
 }
