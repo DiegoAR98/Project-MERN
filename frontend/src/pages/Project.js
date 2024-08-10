@@ -30,19 +30,19 @@ const Project = () => {
     const fetchTasks = async () => {
       const token = localStorage.getItem('token');
       const data = await getTasks(id, token);
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);  // Ensure data is an array
     };
 
     const fetchComments = async () => {
       const token = localStorage.getItem('token');
       const data = await getComments(id, token);
-      setComments(data);
+      setComments(Array.isArray(data) ? data : []);  // Ensure data is an array
     };
 
     const fetchAttachments = async () => {
       const token = localStorage.getItem('token');
       const data = await getAttachments(id, token);
-      setAttachments(data);
+      setAttachments(Array.isArray(data) ? data : []);  // Ensure data is an array
     };
 
     fetchProject();
@@ -71,7 +71,7 @@ const Project = () => {
     try {
       await addTask(id, { name: taskName, dueDate: taskDueDate }, token);
       const data = await getTasks(id, token);
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);  // Ensure data is an array
       setTaskName('');
       setTaskDueDate('');
     } catch (error) {
@@ -84,7 +84,7 @@ const Project = () => {
     try {
       await deleteTask(id, taskId, token);
       const data = await getTasks(id, token);
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);  // Ensure data is an array
     } catch (error) {
       console.error('Error deleting task', error);
     }
@@ -94,7 +94,7 @@ const Project = () => {
     const token = localStorage.getItem('token');
     try {
       const newComment = await addComment(id, { text: commentText }, token);
-      setComments([...comments, newComment]);
+      setComments(prevComments => Array.isArray(prevComments) ? [...prevComments, newComment] : [newComment]);  // Ensure comments is an array
       setCommentText('');
     } catch (error) {
       console.error('Error adding comment', error);
@@ -106,7 +106,7 @@ const Project = () => {
     try {
       await deleteComment(id, commentId, token);
       const data = await getComments(id, token);
-      setComments(data);
+      setComments(Array.isArray(data) ? data : []);  // Ensure data is an array
     } catch (error) {
       console.error('Error deleting comment', error);
     }
@@ -115,7 +115,6 @@ const Project = () => {
   const handleAddAttachment = async () => {
     const token = localStorage.getItem('token');
   
-    // Check if no file is selected
     if (!file) {
       setErrorMessage('Please select a file to upload.');
       return;
@@ -133,7 +132,7 @@ const Project = () => {
   
     try {
       const newAttachment = await addAttachment(id, formData, token);
-      setAttachments([...attachments, newAttachment]);
+      setAttachments(prevAttachments => Array.isArray(prevAttachments) ? [...prevAttachments, newAttachment] : [newAttachment]);  // Ensure attachments is an array
       setFile(null);
       setErrorMessage(''); // Clear error message
     } catch (error) {
@@ -145,12 +144,13 @@ const Project = () => {
       }
     }
   };
+
   const handleDeleteAttachment = async (attachmentId) => {
     const token = localStorage.getItem('token');
     try {
       await deleteAttachment(id, attachmentId, token);
       const data = await getAttachments(id, token);
-      setAttachments(data);
+      setAttachments(Array.isArray(data) ? data : []);  // Ensure data is an array
     } catch (error) {
       console.error('Error deleting attachment', error);
     }
