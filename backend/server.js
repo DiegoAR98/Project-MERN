@@ -75,6 +75,8 @@ async function startApolloServer() {
       const user = await getUser(token.replace('Bearer ', ''));
       return { user };
     },
+    persistedQueries: false,  // Disable persisted queries to avoid DoS attacks
+    cache: "bounded",  // Enable bounded cache to avoid memory exhaustion
   });
 
   await server.start();
