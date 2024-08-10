@@ -20,7 +20,9 @@ const Footer = () => {
     e.preventDefault();
 
     try {
-        await axios.post('http://localhost:5000/api/contact', formData);
+        // Use the environment variable for the API URL
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+        await axios.post(`${apiUrl}/contact`, formData);
         setFormData({
         name: '',
         email: '',
